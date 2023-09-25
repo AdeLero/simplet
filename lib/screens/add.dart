@@ -16,7 +16,7 @@ class _AddState extends State<Add> {
   final _accountController = TextEditingController();
   final _categoryController = TextEditingController();
   TransactionType? _selectedType;
-  final List<Transaction> transactions = transactionList;
+  final List<Transaction> transactions = transactionList.value;
 
   void _showCategoryBottomSheet() {
     showModalBottomSheet(
@@ -61,10 +61,8 @@ class _AddState extends State<Add> {
         selectedAccount: Account(label: _accountController.text)
     );
 
+    transactionList.value=[...transactionList.value,newTransaction];
 
-    setState(() {
-      transactionList.add(newTransaction);
-    });
 
 
     _amountController.clear();
@@ -79,7 +77,11 @@ class _AddState extends State<Add> {
       appBar: AppBar(),
       body: Column(
         children: [
-          TransactionTypeSelector(types: TransactionType.types),
+          TransactionTypeSelector(types: TransactionType.types, onTap: (type) {
+            setState(() {
+              _selectedType=type;
+            });
+          },),
           Row(
             children: [
               const Text('Amount'),

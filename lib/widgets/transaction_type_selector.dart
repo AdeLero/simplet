@@ -3,7 +3,8 @@ import 'package:simple_app/models/transaction_model.dart';
 
 class TransactionTypeSelector extends StatefulWidget {
   final List<TransactionType> types;
-  const TransactionTypeSelector({Key? key, required this.types})
+  final Function(TransactionType) onTap;
+  const TransactionTypeSelector({Key? key, required this.types,required this.onTap})
       : super(key: key);
 
   @override
@@ -26,6 +27,7 @@ class _TransactionTypeSelectorState extends State<TransactionTypeSelector> {
               setState(() {
                 selectedCategoryIndex = index; // Update the selected index.
               });
+              widget.onTap(widget.types[selectedCategoryIndex]);
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 27.0),

@@ -26,10 +26,10 @@ class Transaction {
 }
 
 
-  List<Transaction> transactionList = [
+  ValueNotifier<List<Transaction>> transactionList = ValueNotifier<List<Transaction>>([
     Transaction(id: '01', amount: '500.0', type: TransactionType(label: 'Income'), selectedCategory: Category(label: 'Food', icon: Icons.fastfood), selectedAccount: Account(label: 'Cash')),
     Transaction(id: '02', amount: '400.0', type: TransactionType(label: 'Expense'), selectedCategory: Category(label: 'Transport', icon: Icons.directions_car), selectedAccount: Account(label: 'Bank Accounts')),
-  ];
+  ]);
 
 
 class Category {
@@ -81,4 +81,5 @@ class TransactionType {
     TransactionType(label: 'Expense', color: Colors.redAccent),
     TransactionType(label: 'Transfer', color: Colors.black87)
   ];
+
 }
