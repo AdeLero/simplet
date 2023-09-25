@@ -16,7 +16,7 @@ class _AddState extends State<Add> {
   final _accountController = TextEditingController();
   final _categoryController = TextEditingController();
   TransactionType? _selectedType;
-  final List<Transaction> transactions = transactionList;
+  final List<Transaction> transactions = transactionList.value;
 
   void _showCategoryBottomSheet() {
     showModalBottomSheet(
@@ -53,18 +53,31 @@ class _AddState extends State<Add> {
   }
 
   void _addTransaction() {
+    final selectedCategoryLabel = _categoryController.text;
+    IconData? selectedCategoryIcon;
+    final selectedCategory = Category.categories.firstWhere(
+          (category) {
+        if (category.label == selectedCategoryLabel) {
+          selectedCategoryIcon = category.icon;
+          return true;
+        }
+        return false;
+      },
+      orElse: () => Category(label: selectedCategoryLabel, icon: Icons.category),
+    );
+
     final newTransaction = Transaction(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         type: _selectedType,
         amount: _amountController.text,
-        selectedCategory: Category(label: _categoryController.text),
+        selectedCategory: Category(label: selectedCategoryLabel, icon: selectedCategoryIcon),
         selectedAccount: Account(label: _accountController.text)
     );
 
 
-    setState(() {
-      transactionList.add(newTransaction);
-    });
+    transactionList.value.add(newTransaction);
+
+    transactionList.value = List.from(transactionList.value);
 
 
     _amountController.clear();
@@ -79,7 +92,14 @@ class _AddState extends State<Add> {
       appBar: AppBar(),
       body: Column(
         children: [
-          TransactionTypeSelector(types: TransactionType.types),
+          TransactionTypeSelector(
+            types: TransactionType.types,
+            onTap: (type) {
+              setState(() {
+                _selectedType = type;
+              });
+            },
+          ),
           Row(
             children: [
               const Text('Amount'),

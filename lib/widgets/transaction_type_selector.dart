@@ -3,15 +3,18 @@ import 'package:simple_app/models/transaction_model.dart';
 
 class TransactionTypeSelector extends StatefulWidget {
   final List<TransactionType> types;
-  const TransactionTypeSelector({Key? key, required this.types})
+  final Function(TransactionType) onTap;
+  const TransactionTypeSelector({Key? key, required this.types, required this.onTap})
       : super(key: key);
 
   @override
   _TransactionTypeSelectorState createState() => _TransactionTypeSelectorState();
+
 }
 
 class _TransactionTypeSelectorState extends State<TransactionTypeSelector> {
-  int selectedCategoryIndex = 1; // Initialize with the default index.
+  int selectedTypeIndex = 1;
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +27,16 @@ class _TransactionTypeSelectorState extends State<TransactionTypeSelector> {
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedCategoryIndex = index; // Update the selected index.
+                selectedTypeIndex = index; // Update the selected index.
               });
+              widget.onTap(widget.types[selectedTypeIndex]);
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 27.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: selectedCategoryIndex == index
+                  color: selectedTypeIndex == index
                       ? type.color!
                       : Colors.grey,
                 ),
@@ -40,7 +44,7 @@ class _TransactionTypeSelectorState extends State<TransactionTypeSelector> {
               child: Text(
                 type.label,
                 style: TextStyle(
-                  color: selectedCategoryIndex == index
+                  color: selectedTypeIndex == index
                       ? type.color!
                       : Colors.grey,
                 ),

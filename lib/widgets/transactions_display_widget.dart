@@ -9,7 +9,7 @@ class TransactionDisplayWidget extends StatefulWidget {
 }
 
 class _TransactionDisplayWidgetState extends State<TransactionDisplayWidget> {
-  final List<Transaction> transactions = transactionList;
+  // final List<Transaction> transactions = transactionList.value;
 
   @override
   Widget build(BuildContext context) {
@@ -58,56 +58,62 @@ class _TransactionDisplayWidgetState extends State<TransactionDisplayWidget> {
           child: Container(
             color: Colors.white,
             child: Expanded(
-              child: ListView.builder(
-                  itemCount: transactions.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    TransactionType transactionType = transactions[index].type!;
+              child: ValueListenableBuilder<List<Transaction>>(
+                valueListenable: transactionList,
+                builder: (context, transactions, child) {
+                  return ListView.builder(
+                    itemCount: transactionList.value.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // TransactionType transactionType = transactions[index].type!;
 
-
-
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 100.0,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      transactions[index].selectedCategory?.icon,
-                                      size: 15.0,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      '${transactions[index].selectedCategory?.label}',
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 100.0,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        transactions[index].selectedCategory?.icon,
+                                        size: 15.0,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: 5),
+                                      Container(
+                                        width: 70,
+                                        child: Text(
+                                          '${transactions[index].selectedCategory.label}',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 20),
-                              Text(
-                                '${transactions[index].selectedAccount.label}'
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '\u20A6${transactions[index].amount}',
-                            style: TextStyle(
-
+                                const SizedBox(width: 5),
+                                Text(
+                                    '${transactions[index].selectedAccount.label}'
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            Text(
+                              '\u20A6${transactions[index].amount}',
+                              style: TextStyle(
+                                color: transactionList.value[index].type?.color?? Colors.redAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
@@ -134,6 +140,6 @@ String getWeekdayName(int weekday) {
     case 7:
       return 'Sun';
     default:
-      return ''; // Handle any unexpected values
+      return '';
   }
 }
